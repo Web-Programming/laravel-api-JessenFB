@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Donation;
+use App\Models\Funding;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +16,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+       User::factory(count: 10)->create();
+       
+        $funding = Funding::create([
+            'title' => 'Bantuan Kemanusiaan',
+            'desc' => 'Bantuan untuk korban bencana alam',
+            'image' => 'bantuan-kemanusiaan.jpg',
+            'progress' => 0,  
+            'duration' => '1 Bulan',  
+            'collected' => 0,
+            'target' => 1000000,
+            'user_id' => 1,  
+        ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+
+        Donation::create([
+            'amount' => 100000,
+            'funding_id' => 1,  
+            'user_id' => 1,  
+        ]);
     }
 }

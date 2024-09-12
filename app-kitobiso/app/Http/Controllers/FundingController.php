@@ -14,9 +14,14 @@ class FundingController extends Controller
      */
     public function index()
     {
-        //
+        $data =[
+            'status'=>'success',
+            'message'=>'Data Funding Berhasil',
+            'data'=>Funding::all(),
+        ];
+        
+        return response()->json($data);
     }
-
     /**
      * Show the form for creating a new resource.
      *
