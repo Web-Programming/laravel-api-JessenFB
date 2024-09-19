@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\FundingController;
 use App\Models\Funding;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Action;
 use Illuminate\Support\Facades\Route;
 use Spatie\FlareClient\Api;
 
@@ -46,10 +48,16 @@ Route::get('/donatur', function(Request $request){
         ]);
     });
     
-    Route::get('/funding',[FundingController::class,'index']);
-    Route::get('/funding',[FundingController::class,'store']);
-    Route::get('/funding/{id}',[FundingController::class,'show']);
-    Route::get('/funding/{id}',[FundingController::class,'update']);
-    Route::get('/funding/{id}',[FundingController::class,'destroy']);
+    Route::group(['middleware'=>'auth:sanctum'],function(){
+        Route::get('/funding',[FundingController::class,'index']);
+        Route::get('/funding',[FundingController::class,'store']);
+        Route::get('/funding/{id}',[FundingController::class,'show']);
+        Route::get('/funding/{id}',[FundingController::class,'update']);
+        Route::get('/funding/{id}',[FundingController::class,'destroy']);
 
-    Route::apiResource('donation',DonationController::class);
+        Route::apiResource('donation',DonationController::class);
+    });
+
+
+    Route::post(uri:'/login',action:[AuthController::class,'login']);
+    Route::post(uri:'/register',action:[AuthController::class,'register']);
