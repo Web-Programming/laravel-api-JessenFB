@@ -14,72 +14,76 @@ class DonationController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $data = [
+            'status' => 'success',
+            'message' => 'Data Donation Successfully',
+            'data' => Donation::all(),
+        ];
+        return response()->json($data);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'amount' => 'required|numeric',
+            'funding_id' => 'required|exists:fundings,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $donation = Donation::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Donation Created Successfully',
+            'data' => $donation,
+        ]);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Donation  $donation
-     * @return \Illuminate\Http\Response
      */
     public function show(Donation $donation)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Donation  $donation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Donation $donation)
-    {
-        //
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Donation Data Retrieved Successfully',
+            'data' => $donation,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Donation  $donation
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Donation $donation)
     {
-        //
+        $request->validate([
+            'amount' => 'sometimes|required|numeric',
+            'funding_id' => 'sometimes|required|exists:fundings,id',
+            'user_id' => 'sometimes|required|exists:users,id',
+        ]);
+
+        $donation->update($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Donation Updated Successfully',
+            'data' => $donation,
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Donation  $donation
-     * @return \Illuminate\Http\Response
      */
     public function destroy(Donation $donation)
     {
-        //
+        $donation->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Donation Deleted Successfully',
+        ]);
     }
 }
