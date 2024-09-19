@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Nette\Schema\ValidationException;
 use PHPUnit\Framework\Constraint\Operator;
 
 class AuthController extends Controller
@@ -18,8 +19,12 @@ class AuthController extends Controller
         
         $user = User::where('email',$request->email)->first();
 
-        if(! $user|| !Hash::check($request->password,hashedValue:$user->password)){
-            
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
         }
-    }
+     
+        return $user->createToken($request->device_name)->plainTextToken;
+    });
 }
